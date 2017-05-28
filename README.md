@@ -1,4 +1,4 @@
-# Building a javascript dev env
+# Building a react dev env
 
 ### Editor config
 
