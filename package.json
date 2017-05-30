@@ -45,19 +45,18 @@
     "style-loader": "^0.17.0",
     "webpack": "^2.4.1",
     "webpack-dev-middleware": "^1.10.2",
-    "webpack-dev-server": "^2.4.5",
     "webpack-hot-middleware": "^2.18.0",
     "webpack-md5-hash": "^0.0.5"
   },
   "babel": {
     "presets": [
-      "env"
+      "env", "react"
     ]
   },
   "eslintConfig": {
     "root": true,
     "extends": [
-      "airbnb-base"
+      "airbnb"
     ],
     "parserOptions": {
       "ecmaVersion": 7,
@@ -68,7 +67,13 @@
       "node": true,
       "mocha": true
     },
-    "rules": {}
+    "rules": {
+      "react/jsx-filename-extension": 0,
+      "react/prefer-stateless-function": 0,
+      "import/no-extraneous-dependencies": 0,
+      "import/no-unresolved": 0,
+      "import/extensions": 0
+    }
   },
   "scripts": {
     "start": "npm-run-all --parallel security-check open:src test:watch start-mockapi",
