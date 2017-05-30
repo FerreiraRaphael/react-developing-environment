@@ -42,4 +42,11 @@ export default {
       },
     ],
   },
+  resolve: {
+    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx'],
+    modules: [
+      path.resolve(__dirname, '../node_modules'),
+      path.resolve(__dirname, '../src'),
+    ],
+  },
 };
