@@ -1,11 +1,11 @@
 /**
  * Created by raphael on 19/04/17.
  */
-import path from 'path';
-import webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import WebpackMd5Hash from 'webpack-md5-hash';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WebpackMd5Hash = require('webpack-md5-hash');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // Fix for Error: EINVAL: invalid argument, uv_interface_addresses
 // This seens to be a Windows 10 only error
@@ -16,7 +16,7 @@ try {
   require('os').networkInterfaces = () => ({});
 }
 
-export default {
+module.exports = {
   devtool: 'source-map',
   entry: {
     main: path.resolve(__dirname, '../src/index'),
@@ -29,7 +29,6 @@ export default {
     filename: '[name]-[chunkhash].js',
   },
   plugins: [
-
     // Hash the files using MD5 so that their names change when the content changes.
     new WebpackMd5Hash(),
 
@@ -103,7 +102,13 @@ export default {
     ],
   },
   resolve: {
-    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx'],
+    extensions: [
+      '.webpack-loader.js',
+      '.web-loader.js',
+      '.loader.js',
+      '.js',
+      '.jsx',
+    ],
     modules: [
       path.resolve(__dirname, 'node_modules'),
       path.resolve(__dirname, 'src'),

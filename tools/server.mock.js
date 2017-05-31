@@ -1,5 +1,5 @@
-import jsonServer from 'json-server';
-import path from 'path';
+const jsonServer = require('json-server');
+const path = require('path');
 
 const server = jsonServer.create();
 const router = jsonServer.router(path.resolve(__dirname, '../src/api/db.json'));

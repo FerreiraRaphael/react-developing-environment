@@ -33,4 +33,4 @@ const schema = {
   required: ['users'],
 };
 
-export default schema;
+module.exports = schema;
