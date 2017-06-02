@@ -2,10 +2,9 @@
  * Created by raphael on 24/04/17.
  */
 
-import chalk from 'chalk';
-import webpack from 'webpack';
-import webpackConfig from './webpack.config.prod';
-
+const chalk = require('chalk');
+const webpack = require('webpack');
+const webpackConfig = require('./webpack.config.prod');
 
 process.env.NODE_ENV = 'production';
 

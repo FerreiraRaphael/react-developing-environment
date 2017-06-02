@@ -1,32 +1,50 @@
-import express from 'express';
-import path from 'path';
-import open from 'open';
-import chalk from 'chalk';
-import webpack from 'webpack';
-import config from './webpack.config.dev';
+const express = require('express');
+const path = require('path');
+const open = require('open');
+const chalk = require('chalk');
+const webpack = require('webpack');
+const config = require('./webpack.config.dev');
+const isWindowsBash = require('is-windows-bash');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const port = 3000;
 const app = express();
-const compiler = webpack(config);
+const bundler = webpack(config);
 
 console.log(chalk.blue(`Staring web server at PORT: ${port}`));
 
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: config.output.publicPath,
-}));
+const windowsSettings = isWindowsBash()
+  ? {
+    lazy: false,
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: true,
+    },
+  }
+  : {};
 
-app.get('/', (req, res) => {
+const devMiddlewareConfig = {
+  hot: true,
+  stats: {
+    colors: true,
+  },
+  historyApiFallback: true,
+  ...windowsSettings,
+};
+
+app.use(webpackDevMiddleware(bundler, devMiddlewareConfig));
+
+const hotMiddlewareConfig = {
+  log: console.log,
+  path: '/__webpack_hmr',
+  heartbeat: 10 * 1000,
+};
+
+app.use(webpackHotMiddleware(bundler, hotMiddlewareConfig));
+
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../src/index.html'));
-});
-
-app.get('/users', (req, res) => {
-  // Hard coding for simplicity, Pretend this hits a real database
-  res.json([
-    { id: 1, firstName: 'Bob', lastName: 'Smith', email: 'bob@gmail.com' },
-    { id: 2, firstName: 'Tammy', lastName: 'Norton', email: 'tammy@gmail.com' },
-    { id: 3, firstName: 'Tina', lastName: 'Lee', email: 'tina@gmail.com' },
-  ]);
 });
 
 app.listen(port, (err) => {

@@ -1,31 +1,23 @@
-/**
- * Created by raphael on 19/04/17.
- */
-import './index.css';
-import { getUsers, deleteUser } from './api/userApi';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from 'containers/App';
+import { AppContainer } from 'react-hot-loader';
 
-getUsers().then((result) => {
-  const usersBody = result.reduce((res, user) => `${res}
-    <tr>
-      <td><a href="#" data-id="${user.id}" class="deleteUser">Delete</a></td>
-      <td>${user.id}</td>
-      <td>${user.firstName}</td>
-      <td>${user.lastName}</td>
-      <td>${user.email}</td>
-    </tr>`, '');
+const renderApp = (Component) => {
+  ReactDOM.render(
+    /* <Provider store={store}>
+      <Router>*/
+    <AppContainer>
+      <Component />
+    </AppContainer>,
+    //   </Router>
+    // </Provider>,
+    document.getElementById('root'));
+};
 
-  document.getElementById('users').innerHTML = usersBody;
+renderApp(App);
 
-  const deleteLinks = document.getElementsByClassName('deleteUser');
-
-  Array.from(deleteLinks, (link) => {
-    link.addEventListener('click', (event) => {
-      const element = event.target;
-      event.preventDefault();
-      deleteUser(element.getAttribute('data-id'));
-      const row = element.parentNode.parentNode;
-      row.parentNode.removeChild(row);
-    });
-    return null;
-  });
-});
+// Hot Module Replacement API
+if (module.hot) {
+  module.hot.accept('containers/App', () => renderApp(App));
+}
