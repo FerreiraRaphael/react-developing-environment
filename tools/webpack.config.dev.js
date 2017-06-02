@@ -9,6 +9,7 @@ const webpack = require('webpack');
 // const host = process.env.HOST || 'localhost';
 // const port = process.env.PORT || 3000;
 const sourcePath = path.join(__dirname, '../src');
+const distPath = path.join(__dirname, '../dist');
 
 // const stats = {
 //   assets: true,
@@ -28,23 +29,23 @@ const sourcePath = path.join(__dirname, '../src');
 module.exports = {
   devtool: 'inline-source-map',
   entry: [
-    // activate HMR for React
-    'react-hot-loader/patch',
-
     // bundle the client for webpack-dev-server
     // and connect to the provided endpoint
-    'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
+    'webpack-hot-middleware/client?reload=true',
 
     // bundle the client for hot reloading
     // only- means to only hot reload for successful updates
-    // 'webpack/hot/only-dev-server',
+    'webpack/hot/only-dev-server',
+
+    // activate HMR for React
+    'react-hot-loader/patch',
 
     path.resolve(sourcePath, 'index'),
     // the entry point of our app
   ],
   target: 'web',
   output: {
-    path: sourcePath,
+    path: distPath,
     publicPath: '/',
     filename: 'bundle.js',
   },
