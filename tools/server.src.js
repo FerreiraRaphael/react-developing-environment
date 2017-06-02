@@ -4,6 +4,9 @@ const open = require('open');
 const chalk = require('chalk');
 const webpack = require('webpack');
 const config = require('./webpack.config.dev');
+const isWindowsBash = require('is-windows-bash');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const port = 3000;
 const app = express();
@@ -11,22 +14,34 @@ const bundler = webpack(config);
 
 console.log(chalk.blue(`Staring web server at PORT: ${port}`));
 
-app.use(
-  require('webpack-dev-middleware')(bundler, {
-    hot: true,
-    filename: 'bundle.js',
-    publicPath: '/',
-    stats: {
-      colors: true,
+const windowsSettings = isWindowsBash()
+  ? {
+    lazy: false,
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: true,
     },
-    historyApiFallback: true,
-  }));
+  }
+  : {};
 
-app.use(require('webpack-hot-middleware')(bundler, {
+const devMiddlewareConfig = {
+  hot: true,
+  stats: {
+    colors: true,
+  },
+  historyApiFallback: true,
+  ...windowsSettings,
+};
+
+app.use(webpackDevMiddleware(bundler, devMiddlewareConfig));
+
+const hotMiddlewareConfig = {
   log: console.log,
   path: '/__webpack_hmr',
   heartbeat: 10 * 1000,
-}));
+};
+
+app.use(webpackHotMiddleware(bundler, hotMiddlewareConfig));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../src/index.html'));
